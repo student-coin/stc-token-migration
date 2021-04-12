@@ -7,6 +7,7 @@ import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 import ERC20 from "@openzeppelin/contracts/build/contracts/ERC20.json"
+import STCSwapper from "./abi/STCSwapper.json"
 
 import './App.css';
 import logoSTC from './logoSTC.svg';
@@ -15,8 +16,7 @@ const SUPPORTED_NETWORK = 3
 const NETWORKS = {1: "mainnet", 3: "ropsten"}
 const STCV1ADDR = {1: "0xb8B7791b1A445FB1e202683a0a329504772e0E52", 3: "0x2C62E18C667a8794eA7F0A139F1Ab36A4e696286"}
 const STCV2ADDR = {1: "0x15b543e986b8c34074dfc9901136d9355a537e7e", 3: "0x86DC1b4B59E5FA81Ec679B8F108F9b131C60D28A"}
-// TODO:
-const MIGRATORADDR = {1: "mainnet", 3: "0x86DC1b4B59E5FA81Ec679B8F108F9b131C60D28A"}
+const MIGRATORADDR = {1: "mainnet", 3: "0xd9bdF7ace5d3b7CE9c0cf5f9CB2E620ea088dDCF"}
 
 function initWeb3(provider: any) {
   const web3: any = new Web3(provider);
@@ -93,7 +93,8 @@ class App extends Component {
   async doSwap() {
     const web3 = this.state.web3
     const BN = this.state.BN
-    this.state.old_token.methods.approve(MIGRATORADDR[SUPPORTED_NETWORK], new BN(0)).send({from: this.state.address})
+    this.state.migrator_contract.methods.doSwap().send({from: this.state.address})
+    .on('confirmation', (x) => { this.evalStatus(this.state.address, this.state.networkID, web3) })
   }
 
   async evalStatus(address, networkId, web3) {
@@ -101,6 +102,7 @@ class App extends Component {
     if (networkId === SUPPORTED_NETWORK) {
         const old_token = new web3.eth.Contract(ERC20.abi, STCV1ADDR[SUPPORTED_NETWORK])
         const new_token = new web3.eth.Contract(ERC20.abi, STCV2ADDR[SUPPORTED_NETWORK])
+        const migrator_contract = new web3.eth.Contract(STCSwapper.abi, MIGRATORADDR[SUPPORTED_NETWORK])
         const oldBalance = new BN(await old_token.methods.balanceOf(address).call())
         const oldAllowance = new BN(await old_token.methods.allowance(address, MIGRATORADDR[SUPPORTED_NETWORK]).call())
 
@@ -112,6 +114,7 @@ class App extends Component {
         const wasApproved = oldAllowance.gte(oldBalance)
 
         this.setState({
+          migrator_contract,
           old_token,
           new_token,
           oldBalance,
@@ -169,6 +172,7 @@ class App extends Component {
 <li> We will swap all of your STCV1 - smaller swaps are disallowed </li>
 <li> We will ask you to perform 2 ETH transactions </li>
 <li> When swapping more than 10k STCV1 you will receive a full/partial gas refund for both transactions </li>
+<li> The migration bonus might be changed at any time - right now the gas refund is 0.01 ETH </li>
 </ol>
 </div>
 <Button variant="warning" size="lg" onClick={() => {this.setState({eula: true})}}>I understand what I'm doing</Button>

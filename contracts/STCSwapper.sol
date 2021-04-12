@@ -27,12 +27,20 @@ contract STCSwapper is Ownable {
     function doSwap() public {
         address sender = _msgSender();
         uint256 balance = _stc_v1.balanceOf(sender);
-        require(_stc_v1.transferFrom(sender, address(this), balance), "STCSwapper failed transferFrom");
-        _stc_v2.transfer(sender, balance*(10**16));
-        /* The UI warns the user when this condition doesn't hold */
-        if (balance >= 1000000 && address(this).balance >= _migration_bonus)
-            /* It's OK for this to fail */
-            sender.call{value: _migration_bonus}("");
+        require(balance > 0, "STCSwapper: caller doesn't hold STCV1");
+        bool eligibleForRefund = _migration_bonus > 0 && balance >= 1000000;
+        /* Fail early if we're unable to give a gas refund */
+        if (eligibleForRefund) require(address(this).balance >= _migration_bonus, "STCSwapper: Insufficient ETH for granting a gas refund");
+
+        /* Perform the token swap */
+        require(_stc_v1.transferFrom(sender, address(this), balance), "STCSwapper: failed transferFrom");
+        require(_stc_v2.transfer(sender, balance*(10**16)), "STCSwapper: failed transfer");
+
+        /* Grant a gas refund for a successful swap */
+        if (eligibleForRefund) {
+            (bool sent,) = sender.call{value: _migration_bonus}("");
+            require(sent, "STCSwapper: Failed to grant gas refund");
+        }
     }
 
     function migrationBonus() public view returns (uint256) {
@@ -42,4 +50,17 @@ contract STCSwapper is Ownable {
     function setMigrationBonus(uint256 migration_bonus) public onlyOwner {
         _migration_bonus = migration_bonus;
     }
+
+    /* Sends all ETH and unmigrated STCV2 to owner, STCV1 is locked forever */
+    function closeMigration() public onlyOwner {
+        address sender = _msgSender();
+        setMigrationBonus(0);
+        (bool sent,) = sender.call{value: address(this).balance}("");
+        require(sent, "STCSwapper: Failed to drain ETH from contract");
+        require(_stc_v2.transfer(sender, _stc_v2.balanceOf(address(this))), "STCSwapper: Failed to send all STCV2 to owner");
+    }
+
+    /* Accept ETH deposits */
+    receive() external payable {}
+    fallback() external payable {}
 }
