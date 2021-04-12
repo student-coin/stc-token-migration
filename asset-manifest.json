@@ -1,24 +1,24 @@
 {
   "files": {
     "main.css": "/stc-token-migration/static/css/main.5cf1ba90.chunk.css",
-    "main.js": "/stc-token-migration/static/js/main.d95cfa1a.chunk.js",
-    "main.js.map": "/stc-token-migration/static/js/main.d95cfa1a.chunk.js.map",
-    "runtime-main.js": "/stc-token-migration/static/js/runtime-main.918d7c10.js",
-    "runtime-main.js.map": "/stc-token-migration/static/js/runtime-main.918d7c10.js.map",
-    "static/js/2.ff832d9f.chunk.js": "/stc-token-migration/static/js/2.ff832d9f.chunk.js",
-    "static/js/2.ff832d9f.chunk.js.map": "/stc-token-migration/static/js/2.ff832d9f.chunk.js.map",
-    "static/js/3.5f58c2fb.chunk.js": "/stc-token-migration/static/js/3.5f58c2fb.chunk.js",
-    "static/js/3.5f58c2fb.chunk.js.map": "/stc-token-migration/static/js/3.5f58c2fb.chunk.js.map",
+    "main.js": "/stc-token-migration/static/js/main.7842b937.chunk.js",
+    "main.js.map": "/stc-token-migration/static/js/main.7842b937.chunk.js.map",
+    "runtime-main.js": "/stc-token-migration/static/js/runtime-main.626ff791.js",
+    "runtime-main.js.map": "/stc-token-migration/static/js/runtime-main.626ff791.js.map",
+    "static/js/2.ddf9f19a.chunk.js": "/stc-token-migration/static/js/2.ddf9f19a.chunk.js",
+    "static/js/2.ddf9f19a.chunk.js.map": "/stc-token-migration/static/js/2.ddf9f19a.chunk.js.map",
+    "static/js/3.bc354618.chunk.js": "/stc-token-migration/static/js/3.bc354618.chunk.js",
+    "static/js/3.bc354618.chunk.js.map": "/stc-token-migration/static/js/3.bc354618.chunk.js.map",
     "index.html": "/stc-token-migration/index.html",
     "static/css/main.5cf1ba90.chunk.css.map": "/stc-token-migration/static/css/main.5cf1ba90.chunk.css.map",
-    "static/js/2.ff832d9f.chunk.js.LICENSE.txt": "/stc-token-migration/static/js/2.ff832d9f.chunk.js.LICENSE.txt",
+    "static/js/2.ddf9f19a.chunk.js.LICENSE.txt": "/stc-token-migration/static/js/2.ddf9f19a.chunk.js.LICENSE.txt",
     "static/media/App.css": "/stc-token-migration/static/media/BG.ee00191d.svg",
     "static/media/logoSTC.c5bc01c1.svg": "/stc-token-migration/static/media/logoSTC.c5bc01c1.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.918d7c10.js",
-    "static/js/2.ff832d9f.chunk.js",
+    "static/js/runtime-main.626ff791.js",
+    "static/js/2.ddf9f19a.chunk.js",
     "static/css/main.5cf1ba90.chunk.css",
-    "static/js/main.d95cfa1a.chunk.js"
+    "static/js/main.7842b937.chunk.js"
   ]
 }
