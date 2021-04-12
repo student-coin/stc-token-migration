@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/static/css/main.9d5b29c0.chunk.css",
-    "main.js": "/static/js/main.30be1a3c.chunk.js",
-    "main.js.map": "/static/js/main.30be1a3c.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.f9b1e66d.js",
-    "runtime-main.js.map": "/static/js/runtime-main.f9b1e66d.js.map",
-    "static/js/2.f832690b.chunk.js": "/static/js/2.f832690b.chunk.js",
-    "static/js/2.f832690b.chunk.js.map": "/static/js/2.f832690b.chunk.js.map",
-    "static/js/3.b58e885e.chunk.js": "/static/js/3.b58e885e.chunk.js",
-    "static/js/3.b58e885e.chunk.js.map": "/static/js/3.b58e885e.chunk.js.map",
-    "index.html": "/index.html",
-    "static/css/main.9d5b29c0.chunk.css.map": "/static/css/main.9d5b29c0.chunk.css.map",
-    "static/js/2.f832690b.chunk.js.LICENSE.txt": "/static/js/2.f832690b.chunk.js.LICENSE.txt",
-    "static/media/logo.6ce24c58.svg": "/static/media/logo.6ce24c58.svg"
+    "main.css": "/stc-token-migration/static/css/main.9d5b29c0.chunk.css",
+    "main.js": "/stc-token-migration/static/js/main.30be1a3c.chunk.js",
+    "main.js.map": "/stc-token-migration/static/js/main.30be1a3c.chunk.js.map",
+    "runtime-main.js": "/stc-token-migration/static/js/runtime-main.6d7417cf.js",
+    "runtime-main.js.map": "/stc-token-migration/static/js/runtime-main.6d7417cf.js.map",
+    "static/js/2.f832690b.chunk.js": "/stc-token-migration/static/js/2.f832690b.chunk.js",
+    "static/js/2.f832690b.chunk.js.map": "/stc-token-migration/static/js/2.f832690b.chunk.js.map",
+    "static/js/3.b58e885e.chunk.js": "/stc-token-migration/static/js/3.b58e885e.chunk.js",
+    "static/js/3.b58e885e.chunk.js.map": "/stc-token-migration/static/js/3.b58e885e.chunk.js.map",
+    "index.html": "/stc-token-migration/index.html",
+    "static/css/main.9d5b29c0.chunk.css.map": "/stc-token-migration/static/css/main.9d5b29c0.chunk.css.map",
+    "static/js/2.f832690b.chunk.js.LICENSE.txt": "/stc-token-migration/static/js/2.f832690b.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/stc-token-migration/static/media/logo.6ce24c58.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.f9b1e66d.js",
+    "static/js/runtime-main.6d7417cf.js",
     "static/js/2.f832690b.chunk.js",
     "static/css/main.9d5b29c0.chunk.css",
     "static/js/main.30be1a3c.chunk.js"
