@@ -1,23 +1,24 @@
 {
   "files": {
-    "main.css": "/stc-token-migration/static/css/main.9d5b29c0.chunk.css",
-    "main.js": "/stc-token-migration/static/js/main.30be1a3c.chunk.js",
-    "main.js.map": "/stc-token-migration/static/js/main.30be1a3c.chunk.js.map",
-    "runtime-main.js": "/stc-token-migration/static/js/runtime-main.6d7417cf.js",
-    "runtime-main.js.map": "/stc-token-migration/static/js/runtime-main.6d7417cf.js.map",
-    "static/js/2.f832690b.chunk.js": "/stc-token-migration/static/js/2.f832690b.chunk.js",
-    "static/js/2.f832690b.chunk.js.map": "/stc-token-migration/static/js/2.f832690b.chunk.js.map",
-    "static/js/3.b58e885e.chunk.js": "/stc-token-migration/static/js/3.b58e885e.chunk.js",
-    "static/js/3.b58e885e.chunk.js.map": "/stc-token-migration/static/js/3.b58e885e.chunk.js.map",
+    "main.css": "/stc-token-migration/static/css/main.5cf1ba90.chunk.css",
+    "main.js": "/stc-token-migration/static/js/main.d95cfa1a.chunk.js",
+    "main.js.map": "/stc-token-migration/static/js/main.d95cfa1a.chunk.js.map",
+    "runtime-main.js": "/stc-token-migration/static/js/runtime-main.918d7c10.js",
+    "runtime-main.js.map": "/stc-token-migration/static/js/runtime-main.918d7c10.js.map",
+    "static/js/2.ff832d9f.chunk.js": "/stc-token-migration/static/js/2.ff832d9f.chunk.js",
+    "static/js/2.ff832d9f.chunk.js.map": "/stc-token-migration/static/js/2.ff832d9f.chunk.js.map",
+    "static/js/3.5f58c2fb.chunk.js": "/stc-token-migration/static/js/3.5f58c2fb.chunk.js",
+    "static/js/3.5f58c2fb.chunk.js.map": "/stc-token-migration/static/js/3.5f58c2fb.chunk.js.map",
     "index.html": "/stc-token-migration/index.html",
-    "static/css/main.9d5b29c0.chunk.css.map": "/stc-token-migration/static/css/main.9d5b29c0.chunk.css.map",
-    "static/js/2.f832690b.chunk.js.LICENSE.txt": "/stc-token-migration/static/js/2.f832690b.chunk.js.LICENSE.txt",
-    "static/media/logo.6ce24c58.svg": "/stc-token-migration/static/media/logo.6ce24c58.svg"
+    "static/css/main.5cf1ba90.chunk.css.map": "/stc-token-migration/static/css/main.5cf1ba90.chunk.css.map",
+    "static/js/2.ff832d9f.chunk.js.LICENSE.txt": "/stc-token-migration/static/js/2.ff832d9f.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/stc-token-migration/static/media/BG.ee00191d.svg",
+    "static/media/logoSTC.c5bc01c1.svg": "/stc-token-migration/static/media/logoSTC.c5bc01c1.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.6d7417cf.js",
-    "static/js/2.f832690b.chunk.js",
-    "static/css/main.9d5b29c0.chunk.css",
-    "static/js/main.30be1a3c.chunk.js"
+    "static/js/runtime-main.918d7c10.js",
+    "static/js/2.ff832d9f.chunk.js",
+    "static/css/main.5cf1ba90.chunk.css",
+    "static/js/main.d95cfa1a.chunk.js"
   ]
 }
