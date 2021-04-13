@@ -1,152 +1,181 @@
 .App {
-    text-align: center;
-    background-image: url(BG.svg);
-    background-size: cover;
-    width: 100%;
-    height: 100%;
-    min-height: 100vh;
-    position: relative;
-    background-repeat: no-repeat;
+  text-align: center;
+  background-image: url(BG.svg);
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  position: relative;
+  background-repeat: no-repeat;
 }
 
 .wrapper {
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .App-logo {
-    height: 6rem;
+  height: 6rem;
 }
 
 .App-logo-text {
-    color: white;
+  color: white;
 }
 .App-eula {
-    width: 65%;
-    margin: 0 auto;
+  width: 65%;
+  margin: 0 auto;
 }
 
 .App-eula ol {
-    text-align: left;
-    margin: 20px auto;
-    margin-top: 0;
+  text-align: left;
+  margin: 20px auto;
+  margin-top: 0;
 }
 
 .App-eula ol li {
-    line-height: 1.75;
+  line-height: 1.75;
 }
 
 .App-header {
-    margin: 2rem 0 1rem;
-    text-align: center;
+  margin: 2rem 0 1rem;
+  text-align: center;
 }
 
 .App-using {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
 }
 
 .App-button {
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 10px;
-    color: white;
-    font-weight: 700;
-    cursor: pointer;
-    background: linear-gradient(270deg, #161b68 0%, #0028ac 105%);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(270deg, #161b68 0%, #0028ac 105%);
 }
 
 .mmt-2 {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }
 
 .App-token-information {
-    text-align: left;
-    margin-bottom: 0.3rem;
+  text-align: left;
+  margin-bottom: 0.3rem;
 }
 
 .App-href {
-    color: white;
-    text-decoration: underline;
+  color: white;
+  text-decoration: underline;
 }
 
 .App-code-info {
-    text-align: left;
+  text-align: left;
 }
 .align-left {
-    text-align: left;
+  text-align: left;
 }
 
 .App-header-swap {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
 }
 
 .line-height p {
-    margin: 0.3rem 0;
+  margin: 0.3rem 0;
+}
+
+.alert-message {
+    width: 100%;
+    height: 2.5rem;
+    border-radius: 13px;
+    background-color: white;
+    color: #0069E2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0;
+    padding: 0 1rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    box-shadow: 2px 2px 5px rgba(4, 58, 104, 0.07);;
+}
+
+.alert-message--error {
+  color: white;
+  background: #FF4A70;
+  box-shadow: 1px 1px 5px 0 #FE8FA6;
+}
+
+.alert-message--success {
+  color: white;
+  background: #23f477;
+  box-shadow: 1px 1px 5px 0 #23f477;
 }
 
 @media (max-width: 1000px) {
-    .App-eula ol li {
-        font-size: 0.75rem;
-        line-height: 1.6;
-        margin: 0.3125rem 0;
-    }
+  .App-eula ol li {
+      font-size: 0.75rem;
+      line-height: 1.6;
+      margin: 0.3125rem 0;
+  }
 
-    .App-button {
-        padding: 0.8rem 1.6rem;
-        font-size: 0.75rem;
-    }
+  .App-button {
+      padding: 0.8rem 1.6rem;
+      font-size: 0.75rem;
+  }
 
-    .App-header {
-        font-size: 1.5rem;
-    }
+  .App-header {
+      font-size: 1.5rem;
+  }
 
-    .App-logo {
-        height: 4rem;
-    }
+  .App-logo {
+      height: 4rem;
+  }
 }
 
 @media (max-width: 750px) {
-    .App {
-        background-size: 120vh;
-    }
+  .App {
+      background-size: 120vh;
+  }
 }
 
 @media (max-width: 750px) and (max-height: 600px) {
-    .App {
-        background-size: cover;
-    }
+  .App {
+      background-size: cover;
+  }
 }
 
 @media (max-width: 500px) {
-    .App-eula ol {
-        width: 90%;
-    }
+  .App-eula ol {
+      width: 90%;
+  }
 }
 
 @media (max-width: 400px) {
-    .App-eula ol {
-        width: 100%;
-    }
-    .App-header {
-        margin: 0.875rem 0;
-    }
-    .App-button {
-        padding: 0.75rem 1.5rem;
-        font-size: 0.75rem;
-    }
-    .App-eula ol li {
-        font-size: 0.7rem;
-        line-height: 1.5;
-        margin: 0.2rem 0;
-    }
+  .App-eula ol {
+      width: 100%;
+  }
+  .App-header {
+      margin: 0.875rem 0;
+  }
+  .App-button {
+      padding: 0.75rem 1.5rem;
+      font-size: 0.75rem;
+  }
+  .App-eula ol li {
+      font-size: 0.7rem;
+      line-height: 1.5;
+      margin: 0.2rem 0;
+  }
 
-    .App-header {
-        font-size: 1.2rem;
-    }
+  .App-header {
+      font-size: 1.2rem;
+  }
 }
