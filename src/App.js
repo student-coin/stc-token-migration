@@ -18,8 +18,8 @@ const STCV1ADDR = {1: "0xb8B7791b1A445FB1e202683a0a329504772e0E52", 3: "0x2C62E1
 const STCV2ADDR = {1: "0x15b543e986b8c34074dfc9901136d9355a537e7e", 3: "0x86DC1b4B59E5FA81Ec679B8F108F9b131C60D28A"}
 const MIGRATORADDR = {1: "mainnet", 3: "0xd9bdF7ace5d3b7CE9c0cf5f9CB2E620ea088dDCF"}
 
-function initWeb3(provider: any) {
-  const web3: any = new Web3(provider);
+function initWeb3(provider) {
+  const web3 = new Web3(provider);
 
   web3.eth.extend({
     methods: [
@@ -87,13 +87,15 @@ class App extends Component {
     const web3 = this.state.web3
     const BN = this.state.BN
     this.state.old_token.methods.approve(MIGRATORADDR[SUPPORTED_NETWORK], new BN(2).pow(new BN(256)).sub(new BN(1))).send({from: this.state.address})
-    .on('confirmation', (x) => { this.evalStatus(this.state.address, this.state.networkID, web3) })
+    .on('receipt', () => { this.evalStatus(this.state.address, this.state.networkID, web3) })
+    .on('confirmation', () => { this.evalStatus(this.state.address, this.state.networkID, web3) })
   }
 
   async doSwap() {
     const web3 = this.state.web3
     this.state.migrator_contract.methods.doSwap().send({from: this.state.address})
-    .on('confirmation', (x) => { this.evalStatus(this.state.address, this.state.networkID, web3) })
+    .on('receipt', () => { this.evalStatus(this.state.address, this.state.networkID, web3) })
+    .on('confirmation', () => { this.evalStatus(this.state.address, this.state.networkID, web3) })
   }
 
   async evalStatus(address, networkId, web3) {
@@ -134,22 +136,22 @@ class App extends Component {
     }
     /* TODO: Make is saner - don't reload the app... */
     provider.on("close", () => {window.location.reload(false);});
-    provider.on("accountsChanged", async (accounts: string[]) => {
+    provider.on("accountsChanged", async () => {
       window.location.reload(false);
     });
-    provider.on("chainChanged", async (chainId: number) => {
+    provider.on("chainChanged", async () => {
        window.location.reload(false);
     });
 
-    provider.on("networkChanged", async (networkId: number) => {
+    provider.on("networkChanged", async () => {
        window.location.reload(false);
     });
-  };
+  }
 
   render() {
   return (
 <div className="App">
-<div class="wrapper">
+<div className="wrapper">
 
 <div></div>
 <div></div>
@@ -163,7 +165,7 @@ class App extends Component {
 <div>
 <div className="App-eula">
 <ol>
-<li> Only access this app if you're a holder of STCV1 </li>
+<li> Only access this app if you&aposre a holder of STCV1 </li>
 <li> NEVER send STCV1 directly to the migration contract </li>
 <li> If you disregarded 2) then contact STC support </li>
 <li> You need to have ETH in your wallet in order to swap STCV1 for STCV2 </li>
@@ -174,7 +176,7 @@ class App extends Component {
 <li> The migration bonus might be changed at any time - right now the gas refund is 0.01 ETH </li>
 </ol>
 </div>
-<Button variant="warning" size="lg" onClick={() => {this.setState({eula: true})}}>I understand what I'm doing</Button>
+<Button variant="warning" size="lg" onClick={() => {this.setState({eula: true})}}>I understand what I&aposm doing</Button>
 </div>
 ) : !this.state.connected ?
 (
@@ -186,7 +188,7 @@ class App extends Component {
     <Alert variant="danger"> Unsupported network id! Please switch to {NETWORKS[SUPPORTED_NETWORK]}  </Alert>
 ) : this.state.oldBalance.isZero() ?
 (
-    <Alert variant="success"> You don't hold any STCV1 tokens </Alert>
+    <Alert variant="success"> You don&apost hold any STCV1 tokens </Alert>
 ) :
 (
 <div>
@@ -203,7 +205,7 @@ class App extends Component {
 ? (
 <div>
 <Button variant="success" size="lg" onClick={this.doApprove.bind(this)}>Approve swap?</Button>
-<div> In case the approval got confirmed and the app didn't acknowledge that then reload the Dapp </div>
+<div> In case the approval got confirmed and the app didn&apost acknowledge that then reload the Dapp </div>
 </div>)
 : (
 <Button variant="success" size="lg" onClick={this.doSwap.bind(this)}>Swap STCV1 for STCV2?</Button>
