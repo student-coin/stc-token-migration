@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import Modal from "react-bootstrap/Modal";
+import Spinner from "react-bootstrap/Spinner";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 
@@ -82,22 +84,42 @@ class App extends Component {
   async doApprove() {
     const web3 = this.state.web3;
     const BN = this.state.BN;
+    this.setState({ txInProgress: true });
     this.state.old_token.methods
       .approve(addrMigrator, new BN(2).pow(new BN(256)).sub(new BN(1)))
       .send({ from: this.state.address })
       .on("confirmation", () => {
         this.evalStatus(this.state.address, this.state.networkId, web3);
+        this.setState({ txInProgress: false });
+      })
+      .catch((e) => {
+        console.log(e);
+        this.setState({
+          txInProgress: false,
+          showErrorMsg: true,
+          errorMsg: JSON.stringify(e),
+        });
       });
   }
 
   async doSwap() {
     const web3 = this.state.web3;
+    this.setState({ txInProgress: true });
     this.state.migrator_contract.methods
       .doSwap()
       .send({ from: this.state.address })
       .on("confirmation", () => {
         console.log("confirmation");
         this.evalStatus(this.state.address, this.state.networkId, web3);
+        this.setState({ txInProgress: false });
+      })
+      .catch((e) => {
+        console.log(e);
+        this.setState({
+          txInProgress: false,
+          showErrorMsg: true,
+          errorMsg: JSON.stringify(e),
+        });
       });
   }
 
@@ -180,6 +202,27 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <Modal show={this.state.showErrorMsg}>
+          <Modal.Header>
+            <Modal.Title>Error</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <p>Error: {this.state.errorMsg}</p>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              onClick={() => {
+                this.setState({ showErrorMsg: false });
+              }}
+            >
+              OK
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         <div className="wrapper">
           <div></div>
           <div></div>
@@ -267,9 +310,7 @@ class App extends Component {
                   <div>
                     {" "}
                     STCV2 balance:{" "}
-                    {this.state.newBalance
-                      .div(this.state.I10E18)
-                      .toString()}{" "}
+                    {this.state.web3.utils.fromWei(this.state.newBalance)}{" "}
                   </div>
                   <div>
                     {" "}
@@ -315,19 +356,20 @@ class App extends Component {
                     </Alert>
                   ) : !this.state.wasApproved ? (
                     <div>
-                      <Button
-                        variant="success"
-                        size="lg"
-                        onClick={this.doApprove.bind(this)}
-                      >
-                        Approve swap?
-                      </Button>
-                      <div>
-                        {" "}
-                        In case the approval got confirmed and the app
-                        didn&apost acknowledge that then reload the Dapp{" "}
-                      </div>
+                      {this.state.txInProgress ? (
+                        <Spinner animation="border" variant="success" />
+                      ) : (
+                        <Button
+                          variant="success"
+                          size="lg"
+                          onClick={this.doApprove.bind(this)}
+                        >
+                          Approve swap?
+                        </Button>
+                      )}
                     </div>
+                  ) : this.state.txInProgress ? (
+                    <Spinner animation="border" variant="success" />
                   ) : (
                     <Button
                       variant="success"
