@@ -2,7 +2,7 @@
   "name": "stc-token-migration",
   "version": "0.1.0",
   "private": false,
-  "homepage": "https://studentcointeam.github.io/stc-token-migration/",
+  "homepage": "https://swap.studentcoin.org/",
   "dependencies": {
     "@openzeppelin/contracts": "^4.0.0",
     "@testing-library/jest-dom": "^5.11.10",
