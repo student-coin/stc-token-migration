@@ -12,20 +12,12 @@ import STCSwapper from "./abi/STCSwapper.json";
 import "./App.css";
 import logoSTC from "./logoSTC.svg";
 
-const SUPPORTED_NETWORK = 3;
-const NETWORKS = { 1: "mainnet", 3: "ropsten" };
-const STCV1ADDR = {
-  1: "0xb8B7791b1A445FB1e202683a0a329504772e0E52",
-  3: "0x2C62E18C667a8794eA7F0A139F1Ab36A4e696286",
-};
-const STCV2ADDR = {
-  1: "0x15b543e986b8c34074dfc9901136d9355a537e7e",
-  3: "0x86DC1b4B59E5FA81Ec679B8F108F9b131C60D28A",
-};
-const MIGRATORADDR = {
-  1: "mainnet",
-  3: "0xd9bdF7ace5d3b7CE9c0cf5f9CB2E620ea088dDCF",
-};
+const targetNetworkID = +process.env.REACT_APP_TARGET_NETWORK_ID
+const targetNetworkName = process.env.REACT_APP_NETWORK_NAME
+const addrStcv1 = process.env.REACT_APP_ADDR_STCV1
+const addrStcv2 = process.env.REACT_APP_ADDR_STCV2
+const addrMigrator = process.env.REACT_APP_ADDR_MIGRATOR
+const infuraId = process.env.REACT_APP_INFURA_ID
 
 function initWeb3(provider) {
   const web3 = new Web3(provider);
@@ -47,7 +39,7 @@ const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider,
     options: {
-      infuraId: "6a994151aa4a42fb89d772c6f1f00db7",
+      infuraId
     },
   },
 };
@@ -57,7 +49,7 @@ class App extends Component {
     super(props);
     this.state = { eula: false };
     this.web3Modal = new Web3Modal({
-      network: NETWORKS[SUPPORTED_NETWORK],
+      network: targetNetworkName,
       cacheProvider: false,
       providerOptions: providerOptions,
     });
@@ -65,17 +57,12 @@ class App extends Component {
 
   async onConnect() {
     const provider = await this.web3Modal.connect();
-
     await this.subscribeProvider(provider);
-
     const web3 = initWeb3(provider);
 
     const accounts = await web3.eth.getAccounts();
-
     const address = accounts[0];
-
     const networkId = await web3.eth.net.getId();
-
     const chainId = await web3.eth.chainId();
 
     await this.evalStatus(address, networkId, web3);
@@ -88,7 +75,7 @@ class App extends Component {
       connected: true,
       address,
       chainId,
-      networkId,
+      networkId
     });
   }
 
@@ -97,15 +84,12 @@ class App extends Component {
     const BN = this.state.BN;
     this.state.old_token.methods
       .approve(
-        MIGRATORADDR[SUPPORTED_NETWORK],
+        addrMigrator,
         new BN(2).pow(new BN(256)).sub(new BN(1))
       )
       .send({ from: this.state.address })
-      .on("receipt", () => {
-        this.evalStatus(this.state.address, this.state.networkID, web3);
-      })
       .on("confirmation", () => {
-        this.evalStatus(this.state.address, this.state.networkID, web3);
+        this.evalStatus(this.state.address, this.state.networkId, web3);
       });
   }
 
@@ -114,46 +98,43 @@ class App extends Component {
     this.state.migrator_contract.methods
       .doSwap()
       .send({ from: this.state.address })
-      .on("receipt", () => {
-        this.evalStatus(this.state.address, this.state.networkID, web3);
-      })
       .on("confirmation", () => {
-        this.evalStatus(this.state.address, this.state.networkID, web3);
+        console.log("confirmation")
+        this.evalStatus(this.state.address, this.state.networkId, web3);
       });
   }
 
   async evalStatus(address, networkId, web3) {
     const BN = web3.utils.BN.BN;
-    if (networkId === SUPPORTED_NETWORK) {
+    if (networkId === targetNetworkID) {
       const old_token = new web3.eth.Contract(
         ERC20.abi,
-        STCV1ADDR[SUPPORTED_NETWORK]
+        addrStcv1
       );
       const new_token = new web3.eth.Contract(
         ERC20.abi,
-        STCV2ADDR[SUPPORTED_NETWORK]
+        addrStcv2
       );
       const migrator_contract = new web3.eth.Contract(
         STCSwapper.abi,
-        MIGRATORADDR[SUPPORTED_NETWORK]
-      );
-      const oldBalance = new BN(
-        await old_token.methods.balanceOf(address).call()
-      );
-      const oldAllowance = new BN(
-        await old_token.methods
-          .allowance(address, MIGRATORADDR[SUPPORTED_NETWORK])
-          .call()
+        addrMigrator
       );
 
-      const migratorETHBalance = await web3.eth.getBalance(
-        MIGRATORADDR[SUPPORTED_NETWORK]
-      );
-      const migratorSTCV2Balance = new BN(
-        await new_token.methods
-          .balanceOf(MIGRATORADDR[SUPPORTED_NETWORK])
-          .call()
-      );
+      const d = (await Promise.all([ old_token.methods.balanceOf(address).call()
+                                   , new_token.methods.balanceOf(address).call()
+                                   , old_token.methods.allowance(address, addrMigrator).call()
+                                   , web3.eth.getBalance(addrMigrator)
+                                   , migrator_contract.methods.migrationBonus().call()
+                                   , new_token.methods.balanceOf(addrMigrator).call()
+                                   ])).map((x) => new BN(x))
+      const oldBalance = d[0];
+      const newBalance = d[1];
+      const oldAllowance = d[2];
+      const migratorETHBalance = d[3];
+      const migrationBonus = d[4]
+      const migratorSTCV2Balance = d[5]
+
+      const I10E18 = (new BN(10**10)).mul(new BN(10**8))
       const eligibleForRefund = oldBalance.gte(new BN(1000000));
       const canMigratorRefund = false; // TODO
       const canSwap = migratorSTCV2Balance.gte(
@@ -166,13 +147,17 @@ class App extends Component {
         old_token,
         new_token,
         oldBalance,
+        newBalance,
         oldAllowance,
         migratorETHBalance,
+        migrationBonus,
         migratorSTCV2Balance,
         eligibleForRefund,
         canMigratorRefund,
         canSwap,
         wasApproved,
+        address,
+        I10E18
       });
     }
   }
@@ -181,17 +166,18 @@ class App extends Component {
     if (!provider.on) {
       return;
     }
-    /* TODO: Make is saner - don't reload the app... */
     provider.on("close", () => {
       window.location.reload(false);
     });
-    provider.on("accountsChanged", async () => {
-      window.location.reload(false);
+    provider.on("accountsChanged", async (accounts) => {
+      console.log(accounts)
+      const address = accounts[0];
+      await this.evalStatus(address, this.state.networkId, this.state.web3);
     });
+    /* TODO: Make is saner - don't reload the app... */
     provider.on("chainChanged", async () => {
       window.location.reload(false);
     });
-
     provider.on("networkChanged", async () => {
       window.location.reload(false);
     });
@@ -266,16 +252,11 @@ class App extends Component {
                     Connect wallet
                   </Button>
                 </div>
-              ) : this.state.chainId !== SUPPORTED_NETWORK ? (
+              ) : this.state.chainId !== targetNetworkID ? (
                 <Alert variant="danger">
                   {" "}
                   Unsupported network id! Please switch to{" "}
-                  {NETWORKS[SUPPORTED_NETWORK]}{" "}
-                </Alert>
-              ) : this.state.oldBalance.isZero() ? (
-                <Alert variant="success">
-                  {" "}
-                  You don&apost hold any STCV1 tokens{" "}
+                  {targetNetworkName}{" "}
                 </Alert>
               ) : (
                 <div>
@@ -290,10 +271,14 @@ class App extends Component {
                   </div>
                   <div>
                     {" "}
-                    Migrators STCV1 allowance:{" "}
-                    {this.state.oldAllowance
-                      .div(new this.state.BN(10 ** 2))
+                    STCV2 balance:{" "}
+                    {this.state.newBalance
+                      .div(this.state.I10E18)
                       .toString()}{" "}
+                  </div>
+                  <div>
+                    {" "}
+                    Migrators STCV1 allowance: {this.state.wasApproved ? "OK" : "Insufficient"}
                   </div>
                   <div>
                     {" "}
@@ -303,13 +288,25 @@ class App extends Component {
                     )}{" "}
                   </div>
                   <div>
-                    {" "}
-                    {this.state.eligibleForRefund
+                    ETH refund pool: {this.state.web3.utils.fromWei(this.state.migratorETHBalance)} ETH
+                  </div>
+                  <div>
+                    Current migration bonus: {this.state.web3.utils.fromWei(this.state.migrationBonus)} ETH
+                  </div>
+                  <div>
+                    { this.state.migrationBonus.isZero()
+                      ? "Migration bonus was disabled by STC - subsidies ended"
+                      : this.state.eligibleForRefund
                       ? "Eligible for gas refund - at the end of the migration you will receive a small ETH refund"
-                      : "You're not eligible for a gas refund - you hold less than 10k STCV1"}{" "}
+                      : "You're not eligible for a gas refund - you hold less than 10k STCV1"}
                   </div>
 
-                  {!this.state.canSwap ? (
+                  {this.state.oldBalance.isZero() ? (
+                    <Alert variant="success">
+                      You don t hold any STCV1 tokens
+                    </Alert>
+                  ) :
+                  !this.state.canSwap ? (
                     <Alert variant="danger">
                       {" "}
                       Migration contract has insufficient STCV2 - contact STC
