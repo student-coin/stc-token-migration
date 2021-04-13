@@ -92,7 +92,6 @@ class App extends Component {
 
   async doSwap() {
     const web3 = this.state.web3
-    const BN = this.state.BN
     this.state.migrator_contract.methods.doSwap().send({from: this.state.address})
     .on('confirmation', (x) => { this.evalStatus(this.state.address, this.state.networkID, web3) })
   }
