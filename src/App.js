@@ -345,6 +345,14 @@ class App extends Component {
                     You don&apos;t hold any STC v1 tokens. If you&apos;ve just
                     performed a swap then STC v2 tokens were transferred to your
                     account.
+                    <br />
+                    <a
+                      href="https://etherscan.io/token/0x15b543e986b8c34074dfc9901136d9355a537e7e"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Click to see STC v2 at Etherscan.
+                    </a>
                   </Alert>
                   <Button
                     variant="success"
@@ -416,9 +424,7 @@ class App extends Component {
                   )}
                   {this.state.oldBalance.isZero() ? (
                     <div className="alert-message alert-message--error">
-                      You don&apos;t hold any STC v1 tokens. If you&apos;ve just
-                      performed a swap then STC v2 tokens were transferred to
-                      your account.
+                      You don&apos;t hold any STC v1 tokens
                     </div>
                   ) : !this.state.canSwap ? (
                     <div className="alert-message alert-message--error">
