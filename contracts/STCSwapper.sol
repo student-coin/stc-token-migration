@@ -1,5 +1,7 @@
 /* SPDX-License-Identifier: MIT
     One way swapper from STCV1 to STCV2
+    NEVER SEND STCV1 DIRECTLY TO THIS CONTRACT
+    Only migrate your STCV1 using swap.studentcoin.org
     Swaps larger than 10k STC are partially subsidized by covering the TX fee by the contract
     STCV1: 0xb8B7791b1A445FB1e202683a0a329504772e0E52 Decimals: 2
     STCV2: 0x15b543e986b8c34074dfc9901136d9355a537e7e Decimals: 18
@@ -16,12 +18,13 @@ contract STCSwapper is Ownable {
     /* Migration bonus in wei */
     uint256 private _migration_bonus;
 
-    constructor(address stc_v1, address stc_v2, uint256 migration_bonus) {
+    constructor(address stc_v1, address stc_v2, uint256 migration_bonus, address owner) {
         _stc_v1 = ERC20(stc_v1);
         _stc_v2 = ERC20(stc_v2);
         _migration_bonus = migration_bonus;
         require(_stc_v1.decimals() == 2, "STCSwapper: invalid address of STC V1");
         require(_stc_v2.decimals() == 18, "STCSwapper: invalid address of STC V2");
+        transferOwnership(owner);
     }
 
     function doSwap() public {
