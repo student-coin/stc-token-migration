@@ -13,12 +13,8 @@ import STCSwapper from "./abi/STCSwapper.json";
 
 import "./App.css";
 import logoSTC from "./logoSTC.svg";
+import chains from "./Chains.json";
 
-const targetNetworkID = +process.env.REACT_APP_TARGET_NETWORK_ID;
-const targetNetworkName = process.env.REACT_APP_NETWORK_NAME;
-const addrStcv1 = process.env.REACT_APP_ADDR_STCV1;
-const addrStcv2 = process.env.REACT_APP_ADDR_STCV2;
-const addrMigrator = process.env.REACT_APP_ADDR_MIGRATOR;
 const infuraId = process.env.REACT_APP_INFURA_ID;
 
 function initWeb3(provider) {
@@ -51,7 +47,6 @@ class App extends Component {
     super(props);
     this.state = {};
     this.web3Modal = new Web3Modal({
-      network: targetNetworkName,
       cacheProvider: true,
       providerOptions: providerOptions,
     });
@@ -104,7 +99,10 @@ class App extends Component {
     const BN = this.state.BN;
     this.setState({ txInProgress: true });
     this.state.old_token.methods
-      .approve(addrMigrator, new BN(2).pow(new BN(256)).sub(new BN(1)))
+      .approve(
+        chains[this.state.networkId].addr_migrator,
+        new BN(2).pow(new BN(256)).sub(new BN(1))
+      )
       .send({ from: this.state.address })
       .on("confirmation", () => {
         this.evalStatus(this.state.address, this.state.networkId, web3);
@@ -143,22 +141,23 @@ class App extends Component {
 
   async evalStatus(address, networkId, web3) {
     const BN = web3.utils.BN.BN;
-    if (networkId === targetNetworkID) {
-      const old_token = new web3.eth.Contract(ERC20.abi, addrStcv1);
-      const new_token = new web3.eth.Contract(ERC20.abi, addrStcv2);
+    const config = chains[networkId];
+    if (config) {
+      const old_token = new web3.eth.Contract(ERC20.abi, config.addr_stcv1);
+      const new_token = new web3.eth.Contract(ERC20.abi, config.addr_stcv2);
       const migrator_contract = new web3.eth.Contract(
         STCSwapper.abi,
-        addrMigrator
+        config.addr_migrator
       );
 
       const d = (
         await Promise.all([
           old_token.methods.balanceOf(address).call(),
           new_token.methods.balanceOf(address).call(),
-          old_token.methods.allowance(address, addrMigrator).call(),
-          web3.eth.getBalance(addrMigrator),
+          old_token.methods.allowance(address, config.addr_migrator).call(),
+          web3.eth.getBalance(config.addr_migrator),
           migrator_contract.methods.migrationBonus().call(),
-          new_token.methods.balanceOf(addrMigrator).call(),
+          new_token.methods.balanceOf(config.addr_migrator).call(),
         ])
       ).map((x) => new BN(x));
       const oldBalance = d[0];
@@ -208,12 +207,21 @@ class App extends Component {
       const address = accounts[0];
       await this.evalStatus(address, this.state.networkId, this.state.web3);
     });
-    /* TODO: Make is saner - don't reload the app... */
     provider.on("chainChanged", async () => {
-      window.location.reload(false);
+      const web3 = this.state.web3;
+      const networkId = await web3.eth.net.getId();
+      const chainId = await web3.eth.chainId();
+      this.evalStatus(this.state.address, networkId, web3).then(() => {
+        this.setState({ networkId, chainId });
+      });
     });
     provider.on("networkChanged", async () => {
-      window.location.reload(false);
+      const web3 = this.state.web3;
+      const networkId = await web3.eth.net.getId();
+      const chainId = await web3.eth.chainId();
+      this.evalStatus(this.state.address, networkId, web3).then(() => {
+        this.setState({ networkId, chainId });
+      });
     });
   }
 
@@ -283,7 +291,7 @@ class App extends Component {
                     </ol>
 
                     <p className="App-code-info">
-                      The code of the STC Token v1 to v2 migration app could be
+                      The code of the STC Token v1 to v2 migration app can be
                       reviewed at: &nbsp;
                       <a
                         className="App-href"
@@ -314,13 +322,11 @@ class App extends Component {
                     Connect wallet
                   </button>
                 </div>
-              ) : this.state.chainId !== targetNetworkID ? (
+              ) : !chains[this.state.chainId] ? (
                 <div>
                   <div className="alert-message alert-message--error">
                     {" "}
-                    Unsupported network id! Please switch to {
-                      targetNetworkName
-                    }{" "}
+                    Unsupported network id! Please switch to mainnet or ropsten{" "}
                   </div>
                   <Button
                     variant="success"
@@ -412,6 +418,11 @@ class App extends Component {
                         : "You're not eligible for a gas refund - you hold less than 10k STC v1"}
                     </div>
                   </div>
+                  {chains[this.state.chainId].name === "mainnet" ? null : (
+                    <div className="alert-message alert-message--error">
+                      You&apos;re on testnet
+                    </div>
+                  )}
                   {this.state.oldBalance.isZero() ? (
                     <div className="alert-message alert-message--error">
                       You don&apos;t hold any STC v1 tokens

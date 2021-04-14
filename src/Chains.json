@@ -1,0 +1,14 @@
+{
+  "1": {
+    "name": "mainnet",
+    "addr_stcv1": "0xb8B7791b1A445FB1e202683a0a329504772e0E52",
+    "addr_stcv2": "0x15b543e986b8c34074dfc9901136d9355a537e7e",
+    "addr_migrator": "todo"
+  },
+  "3": {
+    "name": "ropsten",
+    "addr_stcv1": "0x2C62E18C667a8794eA7F0A139F1Ab36A4e696286",
+    "addr_stcv2": "0x86DC1b4B59E5FA81Ec679B8F108F9b131C60D28A",
+    "addr_migrator": "0xd9bdF7ace5d3b7CE9c0cf5f9CB2E620ea088dDCF"
+  }
+}
