@@ -85,7 +85,6 @@ class App extends Component {
     const address = accounts[0];
     const networkId = await web3.eth.net.getId();
     const chainId = await web3.eth.chainId();
-
     await this.evalStatus(address, networkId, web3);
     const BN = web3.utils.BN.BN;
 
@@ -205,7 +204,6 @@ class App extends Component {
       window.location.reload(false);
     });
     provider.on("accountsChanged", async (accounts) => {
-      console.log(accounts);
       const address = accounts[0];
       await this.evalStatus(address, this.state.networkId, this.state.web3);
     });
@@ -243,184 +241,213 @@ class App extends Component {
         </Modal>
 
         <div className="wrapper">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
           <div>
             <img src={logoSTC} className="App-logo" alt="logo" />
             <div className="App-logo-text">
-              <h2>STCV2 Token migration</h2>
               {this.state.eula === undefined ? (
                 <Spinner animation="border" variant="success" />
               ) : !this.state.eula ? (
                 <div>
                   <div className="App-eula">
+                    <h2 className="App-header">
+                      STC Token v1 to v2 migration app
+                    </h2>
+                    <p className="App-using">
+                      By using the STC Token migration app, you will easily swap
+                      your STC Token to the new updated version. The swap will
+                      be made directly from your wallet, using the secure
+                      connection.
+                    </p>
+                    <p className="App-token-information">
+                      STC Token migration information:
+                    </p>
                     <ol>
                       <li>
-                        {" "}
-                        Only access this app if you&aposre a holder of STCV1{" "}
+                        The swap will give you the same amount of STC Tokens v2
+                        for all STC Tokens v1
+                      </li>
+                      <li>The swap is mandatory and irreversible.</li>
+                      <li>
+                        All of your STC v1 tokens need to be swapped - smaller
+                        swaps are disallowed.
                       </li>
                       <li>
-                        {" "}
-                        NEVER send STCV1 directly to the migration contract{" "}
-                      </li>
-                      <li> If you disregarded 2) then contact STC support </li>
-                      <li>
-                        {" "}
-                        You need to have ETH in your wallet in order to swap
-                        STCV1 for STCV2{" "}
-                      </li>
-                      <li> The swap is irreversible </li>
-                      <li>
-                        {" "}
-                        We will swap all of your STCV1 - smaller swaps are
-                        disallowed{" "}
-                      </li>
-                      <li> We will ask you to perform 2 ETH transactions </li>
-                      <li>
-                        {" "}
-                        When swapping more than 10k STCV1 you will receive a
-                        full/partial gas refund for both transactions{" "}
+                        While swapping, you will perform two transactions and
+                        pay a fee in ETH.
                       </li>
                       <li>
-                        {" "}
-                        The migration bonus might be changed at any time - right
-                        now the gas refund is 0.01 ETH{" "}
+                        When swapping more than 10 000 STC v1, you will receive
+                        a full/partial ETH gas refund for both transactions.
                       </li>
                     </ol>
+
+                    <p className="App-code-info">
+                      The code of the STC Token v1 to v2 migration app could be
+                      reviewed at: &nbsp;
+                      <a
+                        className="App-href"
+                        href="https://github.com/StudentCoinTeam/stc-token-migration"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        https://github.com/StudentCoinTeam/stc-token-migration
+                      </a>
+                    </p>
+
+                    <button
+                      className="App-button mt-2"
+                      onClick={() => {
+                        this.setState({ eula: true });
+                      }}
+                    >
+                      Let&apos;s swap my tokens
+                    </button>
                   </div>
-                  <Button
-                    variant="warning"
-                    size="lg"
-                    onClick={() => {
-                      this.setState({ eula: true });
-                    }}
-                  >
-                    I understand what I&aposm doing
-                  </Button>
                 </div>
               ) : !this.state.connected ? (
                 <div>
-                  <Button
-                    variant="success"
-                    size="lg"
+                  <button
+                    className="App-button mmt-2"
                     onClick={this.onConnect.bind(this)}
                   >
                     Connect wallet
-                  </Button>
+                  </button>
                 </div>
               ) : this.state.chainId !== targetNetworkID ? (
-                <Alert variant="danger">
-                  {" "}
-                  Unsupported network id! Please switch to {
-                    targetNetworkName
-                  }{" "}
-                </Alert>
+                <div>
+                  <div className="alert-message alert-message--error">
+                    {" "}
+                    Unsupported network id! Please switch to {
+                      targetNetworkName
+                    }{" "}
+                  </div>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    onClick={() => {
+                      this.web3Modal.clearCachedProvider();
+                      this.setState({ connected: false });
+                    }}
+                  >
+                    Disconnect Wallet
+                  </Button>{" "}
+                </div>
+              ) : this.state.oldBalance.isZero() ? (
+                <div>
+                  <Alert variant="success">
+                    {" "}
+                    You don&apos;t hold any STC v1 tokens{" "}
+                  </Alert>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    onClick={() => {
+                      this.web3Modal.clearCachedProvider();
+                      this.setState({ connected: false });
+                    }}
+                  >
+                    Disconnect Wallet
+                  </Button>{" "}
+                </div>
               ) : (
                 <div>
-                  <div> Double check that you use the correct account </div>
-                  <div>
-                    {" "}
-                    Connected account: {this.state.address}{" "}
-                    <Button
-                      variant="success"
-                      size="sm"
-                      onClick={() => {
-                        this.web3Modal.clearCachedProvider();
-                        this.setState({ connected: false });
-                      }}
-                    >
-                      Disconnect Wallet
-                    </Button>{" "}
+                  <div className="align-left mmt-2">
+                    <p>Please check the details of the connected account:</p>
+                    <div className="line-height">
+                      <p>
+                        {" "}
+                        Connected account: {this.state.address}{" "}
+                        <Button
+                          variant="success"
+                          size="sm"
+                          onClick={() => {
+                            this.web3Modal.clearCachedProvider();
+                            this.setState({ connected: false });
+                          }}
+                        >
+                          Disconnect Wallet
+                        </Button>{" "}
+                      </p>
+                      <p>
+                        Your STC v1 balance to be swapped:&nbsp;
+                        {this.state.oldBalance
+                          .div(new this.state.BN(10 ** 2))
+                          .toString()}
+                      </p>
+                      <p>
+                        Your STC v2 balance:&nbsp;
+                        {this.state.web3.utils.fromWei(this.state.newBalance)}
+                      </p>
+                      <p>
+                        Migrators STCV1 allowance:&nbsp;
+                        {this.state.wasApproved ? "OK" : "Insufficient"}
+                      </p>
+                      {/* <div>
+                        STC v2 available swap supply:{" "}
+                        {this.state.web3.utils.fromWei(
+                          this.state.migratorSTCV2Balance
+                        )}
+                      </div> */}
+                      <p>
+                        ETH refund pool:&nbsp;
+                        {this.state.web3.utils.fromWei(
+                          this.state.migratorETHBalance
+                        )}
+                        ETH
+                      </p>
+                      <p>
+                        Current migration bonus:&nbsp;
+                        {this.state.web3.utils.fromWei(
+                          this.state.migrationBonus
+                        )}{" "}
+                        ETH
+                      </p>
+                    </div>
+                    <div>
+                      {this.state.migrationBonus.isZero()
+                        ? "Migration bonus was disabled by STC - subsidies ended"
+                        : this.state.eligibleForRefund
+                        ? "Eligible for gas refund - at the end of the migration you will receive a small ETH refund"
+                        : "You're not eligible for a gas refund - you hold less than 10k STC v1"}
+                    </div>
                   </div>
-                  <div>
-                    {" "}
-                    STCV1 balance:{" "}
-                    {this.state.oldBalance
-                      .div(new this.state.BN(10 ** 2))
-                      .toString()}{" "}
-                  </div>
-                  <div>
-                    {" "}
-                    STCV2 balance:{" "}
-                    {this.state.web3.utils.fromWei(this.state.newBalance)}{" "}
-                  </div>
-                  <div>
-                    {" "}
-                    Migrators STCV1 allowance:{" "}
-                    {this.state.wasApproved ? "OK" : "Insufficient"}
-                  </div>
-                  <div>
-                    {" "}
-                    STCV2 available swap supply:{" "}
-                    {this.state.web3.utils.fromWei(
-                      this.state.migratorSTCV2Balance
-                    )}{" "}
-                  </div>
-                  <div>
-                    ETH refund pool:{" "}
-                    {this.state.web3.utils.fromWei(
-                      this.state.migratorETHBalance
-                    )}{" "}
-                    ETH
-                  </div>
-                  <div>
-                    Current migration bonus:{" "}
-                    {this.state.web3.utils.fromWei(this.state.migrationBonus)}{" "}
-                    ETH
-                  </div>
-                  <div>
-                    {this.state.migrationBonus.isZero()
-                      ? "Migration bonus was disabled by STC - subsidies ended"
-                      : this.state.eligibleForRefund
-                      ? "Eligible for gas refund - at the end of the migration you will receive a small ETH refund"
-                      : "You're not eligible for a gas refund - you hold less than 10k STCV1"}
-                  </div>
-
                   {this.state.oldBalance.isZero() ? (
-                    <Alert variant="success">
-                      You don t hold any STCV1 tokens
-                    </Alert>
+                    <div className="alert-message alert-message--error">
+                      You don&apos;t hold any STC v1 tokens
+                    </div>
                   ) : !this.state.canSwap ? (
-                    <Alert variant="danger">
+                    <div className="alert-message alert-message--error">
                       {" "}
-                      Migration contract has insufficient STCV2 - contact STC
+                      Migration contract has insufficient STC v2 - contact STC
                       support.{" "}
-                    </Alert>
+                    </div>
                   ) : !this.state.wasApproved ? (
                     <div>
                       {this.state.txInProgress ? (
                         <Spinner animation="border" variant="success" />
                       ) : (
-                        <Button
-                          variant="success"
-                          size="lg"
+                        <button
+                          className="App-button"
                           onClick={this.doApprove.bind(this)}
                         >
                           Approve swap?
-                        </Button>
+                        </button>
                       )}
                     </div>
                   ) : this.state.txInProgress ? (
                     <Spinner animation="border" variant="success" />
                   ) : (
-                    <Button
-                      variant="success"
-                      size="lg"
+                    <button
+                      className="App-button"
                       onClick={this.doSwap.bind(this)}
                     >
-                      Swap STCV1 for STCV2?
-                    </Button>
+                      Swap STC v1 for STC v2?
+                    </button>
                   )}
                 </div>
               )}
             </div>
           </div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
         </div>
       </div>
     );
