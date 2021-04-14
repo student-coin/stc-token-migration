@@ -342,8 +342,9 @@ class App extends Component {
               ) : this.state.oldBalance.isZero() ? (
                 <div>
                   <Alert variant="success">
-                    {" "}
-                    You don&apos;t hold any STC v1 tokens{" "}
+                    You don&apos;t hold any STC v1 tokens. If you&apos;ve just
+                    performed a swap then STC v2 tokens were transferred to your
+                    account.
                   </Alert>
                   <Button
                     variant="success"
