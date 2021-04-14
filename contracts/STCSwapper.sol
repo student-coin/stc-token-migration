@@ -1,8 +1,8 @@
 /* SPDX-License-Identifier: MIT
-    One way swapper from STCV1 to STCV2
-    NEVER SEND STCV1 DIRECTLY TO THIS CONTRACT
-    Only migrate your STCV1 using swap.studentcoin.org
-    Swaps larger than 10k STC are partially subsidized by covering the TX fee by the contract
+    One way swapper from STC v1 to STC v2
+    NEVER SEND STC v1 DIRECTLY TO THIS CONTRACT
+    Only migrate your STC v1 using swap.studentcoin.org or https://github.com/StudentCoinTeam/stc-token-migration
+    Swaps larger than 10k STC v1 are partially subsidized by covering the TX fee by the contract
     STCV1: 0xb8B7791b1A445FB1e202683a0a329504772e0E52 Decimals: 2
     STCV2: 0x15b543e986b8c34074dfc9901136d9355a537e7e Decimals: 18
 */

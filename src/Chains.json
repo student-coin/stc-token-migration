@@ -3,7 +3,7 @@
     "name": "mainnet",
     "addr_stcv1": "0xb8B7791b1A445FB1e202683a0a329504772e0E52",
     "addr_stcv2": "0x15b543e986b8c34074dfc9901136d9355a537e7e",
-    "addr_migrator": "todo"
+    "addr_migrator": "0xF8282Ba88E002c6e8947a2A211D1cF29c688F895"
   },
   "3": {
     "name": "ropsten",
