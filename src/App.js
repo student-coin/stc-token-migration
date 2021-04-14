@@ -170,7 +170,8 @@ class App extends Component {
 
       const I10E18 = new BN(10 ** 10).mul(new BN(10 ** 8));
       const eligibleForRefund = oldBalance.gte(new BN(1000000));
-      const canMigratorRefund = false; // TODO
+      const canMigratorRefund =
+        migratorETHBalance.gte(migrationBonus) || migrationBonus.isZero();
       const canSwap = migratorSTCV2Balance.gte(
         oldBalance.mul(new BN(10 ** 10)).mul(new BN(10 ** 6))
       );
@@ -418,8 +419,14 @@ class App extends Component {
                   ) : !this.state.canSwap ? (
                     <div className="alert-message alert-message--error">
                       {" "}
-                      Migration contract has insufficient STC v2 - contact STC
-                      support.{" "}
+                      Migration contract has insufficient STC v2 to perform the
+                      swap - contact STC support.{" "}
+                    </div>
+                  ) : !this.state.canMigratorRefund ? (
+                    <div className="alert-message alert-message--error">
+                      {" "}
+                      Migration contract has insufficient ETH to subsidize the
+                      swap - contact STC support.{" "}
                     </div>
                   ) : !this.state.wasApproved ? (
                     <div>
