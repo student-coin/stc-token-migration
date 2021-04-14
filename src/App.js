@@ -49,12 +49,31 @@ const providerOptions = {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { eula: false };
+    this.state = {};
     this.web3Modal = new Web3Modal({
       network: targetNetworkName,
-      cacheProvider: false,
+      cacheProvider: true,
       providerOptions: providerOptions,
     });
+  }
+
+  componentDidMount() {
+    if (this.web3Modal.cachedProvider) {
+      this.onConnect()
+        .then(() => {
+          this.setState({ eula: true });
+        })
+        .catch((e) => {
+          console.log(e);
+          this.setState({
+            txInProgress: false,
+            showErrorMsg: true,
+            errorMsg: JSON.stringify(e),
+          });
+        });
+    } else {
+      this.setState({ eula: false });
+    }
   }
 
   async onConnect() {
@@ -232,7 +251,9 @@ class App extends Component {
             <img src={logoSTC} className="App-logo" alt="logo" />
             <div className="App-logo-text">
               <h2>STCV2 Token migration</h2>
-              {!this.state.eula ? (
+              {this.state.eula === undefined ? (
+                <Spinner animation="border" variant="success" />
+              ) : !this.state.eula ? (
                 <div>
                   <div className="App-eula">
                     <ol>
@@ -299,7 +320,20 @@ class App extends Component {
               ) : (
                 <div>
                   <div> Double check that you use the correct account </div>
-                  <div> Connected account: {this.state.address} </div>
+                  <div>
+                    {" "}
+                    Connected account: {this.state.address}{" "}
+                    <Button
+                      variant="success"
+                      size="sm"
+                      onClick={() => {
+                        this.web3Modal.clearCachedProvider();
+                        this.setState({ connected: false });
+                      }}
+                    >
+                      Disconnect Wallet
+                    </Button>{" "}
+                  </div>
                   <div>
                     {" "}
                     STCV1 balance:{" "}
