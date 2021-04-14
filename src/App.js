@@ -387,16 +387,6 @@ class App extends Component {
                         {this.state.web3.utils.fromWei(this.state.newBalance)}
                       </p>
                       <p>
-                        Migrators STCV1 allowance:&nbsp;
-                        {this.state.wasApproved ? "OK" : "Insufficient"}
-                      </p>
-                      {/* <div>
-                        STC v2 available swap supply:{" "}
-                        {this.state.web3.utils.fromWei(
-                          this.state.migratorSTCV2Balance
-                        )}
-                      </div> */}
-                      <p>
                         ETH refund pool:&nbsp;
                         {this.state.web3.utils.fromWei(
                           this.state.migratorETHBalance
