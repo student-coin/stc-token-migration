@@ -10,7 +10,9 @@
 }
 
 .wrapper {
-  height: 100vh;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  min-height: 100vh;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -140,23 +142,6 @@
   }
 }
 
-@media (max-width: 750px) {
-  .App {
-      background-size: 120vh;
-  }
-}
-
-@media (max-width: 750px) and (max-height: 600px) {
-  .App {
-      background-size: cover;
-  }
-}
-
-@media (max-width: 500px) {
-  .App-eula ol {
-      width: 90%;
-  }
-}
 
 @media (max-width: 400px) {
   .App-eula ol {
