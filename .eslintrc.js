@@ -21,7 +21,8 @@ module.exports = {
         "prettier"
     ],
     "rules": {
-        "prettier/prettier": "warn"
+        "prettier/prettier": "warn",
+        "quotes": ["warn", "double"]
     },
     "settings": {
         "react": {
