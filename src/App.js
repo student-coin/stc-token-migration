@@ -120,14 +120,15 @@ class App extends Component {
 
   async doSwap() {
     const web3 = this.state.web3;
+    const BN = this.state.BN;
     this.setState({ txInProgress: true });
     this.state.migrator_contract.methods
       .doSwap()
       .send({ from: this.state.address })
       .on("confirmation", () => {
         console.log("confirmation");
-        this.evalStatus(this.state.address, this.state.networkId, web3);
-        this.setState({ txInProgress: false });
+        //this.evalStatus(this.state.address, this.state.networkId, web3);
+        this.setState({ txInProgress: false, oldBalance: new BN(0) });
       })
       .catch((e) => {
         console.log(e);
@@ -423,6 +424,10 @@ class App extends Component {
                       You&apos;re on testnet
                     </div>
                   )}
+                  <div className="alert-message alert-message--error">
+                      Only send ONE approval transaction and ONE swap transaction.
+                      Ensure in your wallet that you don't have any pending transactions before sending another one.
+                  </div>
                   {this.state.oldBalance.isZero() ? (
                     <div className="alert-message alert-message--error">
                       You don&apos;t hold any STC v1 tokens
