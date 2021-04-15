@@ -119,7 +119,6 @@ class App extends Component {
   }
 
   async doSwap() {
-    const web3 = this.state.web3;
     const BN = this.state.BN;
     this.setState({ txInProgress: true });
     this.state.migrator_contract.methods
@@ -424,8 +423,8 @@ class App extends Component {
                     </div>
                   )}
                   <div className="alert-message alert-message--error">
-                      Only send ONE approval transaction and ONE swap transaction.
-                      Ensure in your wallet that you don't have any pending transactions before sending another one.
+                    Ensure in your wallet that you don&apos;t have any pending
+                    transactions before sending a tx
                   </div>
                   {this.state.oldBalance.isZero() ? (
                     <div className="alert-message alert-message--error">
